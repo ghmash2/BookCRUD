@@ -35,7 +35,7 @@ $obj = new Test("jhon", 1000, 1);
 
 
 $obj->deposit("jhon", 200)     //we can use here 'Method Chaining' because here 
-    ->withdraw("jhon", 300)    // method return current object($this)/
+    ->deposit("jhon", 300)    // method return current object($this)/
     ->withdraw("rhon", 150);
 
 echo "Acc holder $obj->accName have $obj->balance Taka";

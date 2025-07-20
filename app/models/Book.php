@@ -1,17 +1,20 @@
-<?php 
+<?php
 
-namespace App\Models;
+namespace App\Models\Book;
 
+require_once 'Database.php';
 
-use App\Database;
-class Book{
-    private $pdo;
+use app\Database;
 
-    public function __construct() {
-        $this->pdo = Database::connect();
-    }
+class Book
+{
 
-    public function all() {
-        return $this->pdo->query("SELECT * FROM books ORDER BY id DESC")->fetchAll();
-    }
+    private $name;
+    private $price;
+    private $description;
+    private $author;
+    private $image;
+    
+   
 }
+
