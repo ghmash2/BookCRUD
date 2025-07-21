@@ -1,0 +1,21 @@
+.Table{
+    display: table;
+    border: 2px solid black;
+    padding-left: 50px;
+    padding-right: 50px;
+   
+}
+th,td{
+    padding: 10px;
+    text-align: center;
+    border: 1px solid gray;
+
+}
+.Form{
+    display: flex;
+    justify-content: left;
+    padding-top: 50px;
+}
+h1{
+    text-align: center;
+}

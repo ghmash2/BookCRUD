@@ -15,7 +15,7 @@
 </head>
 
 <body>
-   <form action="bookController.php" method="post" enctype="multipart/form-data">
+   <form action="index.php" method="post" enctype="multipart/form-data" class="Form">
     <label for="name">Book Name: </label>
     <input type="text" name="name" id="name" required>
 
@@ -26,10 +26,10 @@
     <input type="text" name="description" id="description" required>
 
     <label for="price">Price($): </label>
-    <input type="number" name="price" id="price" required>
+    <input type="number" name="price" id="price" step="0.00001" required>
 
     <label for="image">Upload Image: </label>
-    <input type="file" name="image" id="image" accept="image/*">
+    <input type="file" name="image" id="image" accept="image/*"> 
 
     <button type="submit">Submit</button>
    </form>
