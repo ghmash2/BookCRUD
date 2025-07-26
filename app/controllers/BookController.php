@@ -26,14 +26,15 @@ class BookController
             $imageName = basename($_FILES["image"]["name"]);
             $targetPath = $targetDir . $imageName;
             move_uploaded_file($_FILES["image"]["tmp_name"], $targetPath);
-            $stmt = $this->conn->prepare("INSERT INTO books(name, author_name, description, price, image) VALUES (:name, :author, :description, :price, :image)");
+            $stmt = $this->conn->prepare("INSERT INTO books(name, author_name, description, price, image) 
+                                                 VALUES (:name, :author, :description, :price, :image)");
 
             $stmt->execute([
                 ':name' => $name,
                 ':author' => $author_name,
                 ':description' => $description,
                 ':price' => $price,
-                'image' => $imageName
+                ':image' => $imageName
             ]);
 
 
@@ -92,14 +93,16 @@ class BookController
     public function deleteBook()
     {
         $id = $_GET["delete"];
-
-        $stmt = $this->conn->prepare("DELETE FROM books WHERE id=:id");
-
+        $stmt = $this->conn->prepare("SELECT image FROM books WHERE id = :id");
+        $stmt->execute(['id' => $id]);
         $image = $stmt->fetchColumn();
-        if ($image && file_exists("../uploads/" . $image)) {
-            unlink("../uploads/" . $image);
+        
+        $imagepath = "../uploads/" . $image;
+        //echo realpath("../uploads/" . $image);
+        if ($image && file_exists($imagepath)) {
+            unlink($imagepath);
         }
-
+        $stmt = $this->conn->prepare("DELETE FROM books WHERE id=:id");
         $stmt->execute(['id' => $id]);
 
         header("Location: index.php");
