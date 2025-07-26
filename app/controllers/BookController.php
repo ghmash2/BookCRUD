@@ -6,7 +6,10 @@ use PDO;
 use PDOException;
 
 
-
+if(!isset($_SESSION["user"])){
+    header("Location: index.php?action=login");
+    exit;
+}
 class BookController
 {
     private PDO $conn;

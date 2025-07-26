@@ -5,10 +5,12 @@ namespace app\public\index;
 require_once '../config/Config.php';
 require_once '../app/Database.php';
 require_once '../app/controllers/BookController.php';
+require_once '../app/controllers/AuthController.php';
 //require_once 'css/index.css';
 
 
 use app\controllers\BookController;
+use app\controllers\AuthController;
 use function app\Database\openDataConnection;
 
 
@@ -17,8 +19,13 @@ use PDOException;
 
 $conn = openDataConnection();
 
-$allBooks = $conn->query("SELECT * FROM books ORDER BY id DESC")->fetchAll();
+$authController = new AuthController($conn);
 
+if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
+   $authController->register();
+}
+
+$allBooks = $conn->query("SELECT * FROM books ORDER BY id DESC")->fetchAll();
 $bookController = new BookController($conn);
 
 //create
