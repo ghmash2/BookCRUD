@@ -6,10 +6,10 @@ use PDO;
 use PDOException;
 
 
-if(!isset($_SESSION["user"])){
+/*if(!isset($_SESSION["user"])){
     header("Location: index.php?action=login");
     exit;
-}
+}*/
 class BookController
 {
     private PDO $conn;
@@ -41,7 +41,7 @@ class BookController
             ]);
 
 
-            header("Location: index.php");
+           header("Location: index.php");
         }
     }
     public function updateBook()

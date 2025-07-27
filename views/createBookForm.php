@@ -1,6 +1,6 @@
 <h1><?php echo "Book List and" . " Operation" ?></h1>
-    
-     
+
+<?php if (isset($_SESSION['user'])): ?>
     <?php if ($bookToUpdate): ?>
         <form action="index.php" method="post" enctype="multipart/form-data" class="Form">
             <input type="hidden" name="id" value="<?= $bookToUpdate['id'] ?>">
@@ -20,7 +20,7 @@
             <label>New Image:</label>
             <input type="file" name="image" accept="image/*">
 
-            <button class= "Button" style=" background-color: green;" type="submit" name="update">Update</button>
+            <button class="Button" style=" background-color: green;" type="submit" name="update">Update</button>
 
 
         </form>
@@ -42,7 +42,7 @@
             <label for="image">Upload Image: </label>
             <input type="file" name="image" id="image" accept="image/*">
 
-            <button class= "Button" style= "background-color: green;" type="submit" name="create">Submit</button>
+            <button class="Button" style="background-color: green;" type="submit" name="create">Submit</button>
         </form>
     <?php endif; ?>
-      
+<?php endif ?>

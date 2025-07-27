@@ -7,7 +7,7 @@
 </head>
 
 <body>
-    
+
     <table class="Table">
         <thead style="background-color:grey">
             <th>Name</th>
@@ -28,21 +28,27 @@
                     <td> <?= $book['image'] ?> </td>
                     <td> <?= $book['price'] ?> </td>
                     <td>
-                        <form action="index.php" method="get">
-                            <button class= "Button" style=" background-color: green;" type="submit" name="update" value="<?= $book['id'] ?>">Update</button>
-                        </form>
+                        <?php if (isset($_SESSION['user'])): ?>
+                            <form action="index.php" method="get">
+                                <button class="Button" style=" background-color: green;" type="submit" name="update"
+                                    value="<?= $book['id'] ?>">Update</button>
+                            </form>
+                        <?php endif ?>
                     </td>
                     <td>
-                        <form action="index.php" method="get">
-                            <button class= "Button" style=" background-color: darkred;" type="submit" name="delete" value="<?= $book['id'] ?>">Delete</button>
-                        </form>
+                        <?php if (isset($_SESSION['user'])): ?>
+                            <form action="index.php" method="get">
+                                <button class="Button" style=" background-color: darkred;" type="submit" name="delete"
+                                    value="<?= $book['id'] ?>">Delete</button>
+                            </form>
+                        <?php endif ?>
                     </td>
                 </tr>
             <?php endforeach ?>
         </tbody>
 
     </table>
-     
+
 
 </body>
 
