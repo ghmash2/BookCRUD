@@ -11,14 +11,13 @@ class AuthController
     {
         $this->conn = $conn;
     }
-    public function showLogin()
+   /* public function showLogin()
     {
-      require_once __DIR__ . '../../views/login.php';
     }
     public function showRegister()
     {
         require 'views/register.php';
-    }
+    }*/
     public function register()
     {
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -34,12 +33,11 @@ class AuthController
                 ":password" => $password
             ]);
 
-            //header("Location: index.php");
+            header("Location: login.php");
         }
     }
     public function login()
-    {   
-
+    {   $message ="";
         $email = $_POST["email"];
         $password = $_POST["password"];
         $stmt = $this->conn->prepare("SELECT * FROM user WHERE email = :email");
@@ -48,22 +46,28 @@ class AuthController
     
         if ($user) {
             if ($user && password_verify($password, $user["password"])) {
-                $_SESSION["user"] = $user["email"];
-                //session_start();
-                var_dump($_SESSION["user"]);
-                //header("Location : index.php");
-            } else {
-                echo "Invalid email or password";
+                 
 
+                $_SESSION["user"] = $user["email"];
+                $message = "Successfully Logged in";
+                //var_dump($_SESSION["user"]);
+                header("Location : index.php");
+            } else {
+                $message = "Invalid email or password";
+                header("Location : login.php");
+              
             }
         } else {
-            echo "Not Registered Yet!!!";
+            
+            $message = "Not Registered Yet!!!";
+
         }
+        return $message;
     }
     public function logout()
     {
-        session_start();
+        
         session_destroy();
-        // header("Location: index.php");
+        header("Location: index.php");
     }
 }

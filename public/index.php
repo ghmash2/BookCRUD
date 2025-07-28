@@ -1,6 +1,6 @@
 <?php
-namespace app\public\index;
-
+namespace app\public;
+session_start();
 
 require_once '../config/Config.php';
 require_once '../app/Database.php';
@@ -9,22 +9,22 @@ require_once '../app/controllers/AuthController.php';
 //require_once 'css/index.css';
 
 
-use app\controllers\BookController;
-use app\controllers\AuthController;
+use app\controllers\bookController;
+use app\controllers\authController;
 use function app\Database\openDataConnection;
 use PDO;
 use PDOException;
+echo $_SERVER['REQUEST_URI'];
 
-require '../views/navBar.php';
 
 
 $conn = openDataConnection();
 
-/*
+
 $uri = parse_url($_SERVER['REQUEST_URI'])['path'];
 var_dump($uri);
 $routes = [
-      '/'=> '/app/controllers/index.php',
+      '/'=> 'index.php',
       '/login'=> '../app/controllers/AuthController.php',
       '/register'=> '../app/controllers/AuthController.php',
       '/viewBooks'=> '../app/controllers/BookController.php',
@@ -32,10 +32,10 @@ $routes = [
 ];
 if(array_key_exists($uri, $routes)) {
     echo $uri;
-    //require $routes[$uri];
+    require $routes[$uri];
 }
-*/
 
+$message = "";
 
 $authController = new AuthController($conn);
 
@@ -44,7 +44,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
 }
 if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
    //$authController->showLogin();
-   $authController->login();
+  $message = $authController->login();
+  echo $message;
 }
 if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['logout'])) {
     
@@ -81,6 +82,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['delete'])) {
     $bookController->deleteBook();
 }
 
-require_once '../views/login.php';
-require_once '../views/createBookForm.php';
-require_once '../views/booksView.php';
+require 'navBar.php';
+require_once 'createBookForm.php';
+require_once 'booksView.php';

@@ -41,7 +41,7 @@ class BookController
             ]);
 
 
-           header("Location: index.php");
+           //header("Location: index.php");
         }
     }
     public function updateBook()
@@ -91,7 +91,7 @@ class BookController
             ]);
 
         }
-        header("Location: index.php");
+        //header("Location: index.php");
     }
     public function deleteBook()
     {
@@ -108,6 +108,6 @@ class BookController
         $stmt = $this->conn->prepare("DELETE FROM books WHERE id=:id");
         $stmt->execute(['id' => $id]);
 
-        header("Location: index.php");
+       // header("Location: index.php");
     }
 }

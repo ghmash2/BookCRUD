@@ -1,0 +1,87 @@
+/* css/formStyles.css */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+/* Shared container */
+.form-container {
+    background: #fff;
+    padding: 30px 40px;
+    border-radius: 10px;
+    box-shadow: 0 5px 12px rgba(5, 5, 5, 0.15);
+    width: 100%;
+    max-width: 400px;
+}
+
+/* Title */
+.form-container h2 {
+    margin-bottom: 25px;
+    text-align: center;
+    color: #333;
+}
+
+/* Input group */
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: bold;
+    color: #555;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+    resize: vertical;
+}
+
+/* Buttons */
+.btn {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+    background-color: #708674;
+}
+
+/* Links or extra actions */
+.extra-links {
+    margin-top: 15px;
+    text-align: center;
+}
+
+.extra-links a {
+    text-decoration: none;
+    color: #007bff;
+}
+
+.extra-links a:hover {
+    text-decoration: underline;
+}
