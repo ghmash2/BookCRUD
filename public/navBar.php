@@ -16,7 +16,7 @@
 
     <div class="topnav">
         <div class="left-section">
-            <a href="index.php" class="logo">BookCRUD</a>
+            <a href="/" class="logo">BookCRUD</a>
             <a href="home.php" class="nav-link">Home</a>
             <a href="dashboard.php" class="nav-link">Dashboard</a>
             <a href="contact.php" class="nav-link">Contact</a>
@@ -25,12 +25,13 @@
         <?php if (isset($_SESSION['user'])): ?>
             <div class="profile">
                 <!-- <img src="https://i.pravatar.cc/300?img=2" alt="Profile"> -->
-                <span>User Name</span>
-            </div>
-            <form action="index.php" method="post">
-                <button class="Button" style=" background-color: green;" type="submit" name="logout"
+                <span><?= $_SESSION['username'] ?></span>
+            
+            <form action="/" method="post">
+                <button class="btn" style=" background-color: green;" type="submit" name="logout"
                     value=logout>Logout</button>
             </form>
+            </div>
         <?php else: ?>
             <div class="profile">
                 

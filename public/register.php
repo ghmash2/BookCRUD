@@ -4,7 +4,7 @@
 
 <body>
     <div class="form-container">
-        <form action="index.php" method="post">
+        <form action="/" method="post">
             <h2>Register</h2>
             <div class="form-group">
                 <label for="name">User Name: </label>

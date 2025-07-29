@@ -1,6 +1,7 @@
 <?php
 namespace app\controllers;
 
+use DateTime;
 
 use PDO;
 use PDOException;
@@ -24,38 +25,40 @@ class BookController
             $author_name = $_POST['author'];
             $description = $_POST['description'];
             $price = $_POST['price'];
+            $created_by = $_SESSION['user'];
+            $created_at = date("Y-m-d H:i:s");
 
             $targetDir = "../uploads/";
             $imageName = basename($_FILES["image"]["name"]);
             $targetPath = $targetDir . $imageName;
             move_uploaded_file($_FILES["image"]["tmp_name"], $targetPath);
-            $stmt = $this->conn->prepare("INSERT INTO books(name, author_name, description, price, image) 
-                                                 VALUES (:name, :author, :description, :price, :image)");
+            $stmt = $this->conn->prepare("INSERT INTO books(name, author_name, description, price, image, created_by, created_at) 
+                                                 VALUES (:name, :author, :description, :price, :image, :created_by, :created_at)");
 
             $stmt->execute([
                 ':name' => $name,
                 ':author' => $author_name,
                 ':description' => $description,
                 ':price' => $price,
-                ':image' => $imageName
+                ':image' => $imageName,
+                ':created_by' => $created_by,
+                'created_at'=> $created_at
             ]);
 
 
-           //header("Location: index.php");
+           header("Location: index.php");
         }
     }
-    public function updateBook()
+    public function getBookById($id)
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['update'])) {
-            $id = $_GET['update'];
-            // var_dump($id);
-
-            $stmt = $this->conn->prepare('SELECT * FROM books WHERE id= :id');
+         $stmt = $this->conn->prepare('SELECT * FROM books WHERE id= :id');
 
             $stmt->execute([':id' => $id]);
 
             return $stmt->fetch();
-        }
+    }
+    public function updateBook()
+    {
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update'])) {
             $id = $_POST['id'];
 
@@ -91,7 +94,7 @@ class BookController
             ]);
 
         }
-        //header("Location: index.php");
+        header("Location: index.php");
     }
     public function deleteBook()
     {
@@ -108,6 +111,6 @@ class BookController
         $stmt = $this->conn->prepare("DELETE FROM books WHERE id=:id");
         $stmt->execute(['id' => $id]);
 
-       // header("Location: index.php");
+        header("Location: index.php");
     }
 }

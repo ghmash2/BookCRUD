@@ -11,13 +11,13 @@ class AuthController
     {
         $this->conn = $conn;
     }
-   /* public function showLogin()
-    {
-    }
-    public function showRegister()
-    {
-        require 'views/register.php';
-    }*/
+    /* public function showLogin()
+     {
+     }
+     public function showRegister()
+     {
+         require 'views/register.php';
+     }*/
     public function register()
     {
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -37,36 +37,45 @@ class AuthController
         }
     }
     public function login()
-    {   $message ="";
+    {
+        $message = "";
         $email = $_POST["email"];
         $password = $_POST["password"];
         $stmt = $this->conn->prepare("SELECT * FROM user WHERE email = :email");
         $stmt->execute([":email" => $email]);
         $user = $stmt->fetch();
-    
+
         if ($user) {
             if ($user && password_verify($password, $user["password"])) {
-                 
 
-                $_SESSION["user"] = $user["email"];
-                $message = "Successfully Logged in";
+
+                $_SESSION["user"] = $user["id"];
+                $_SESSION["username"] = $user["name"];
+                $_SESSION["role"] = $user["role"];
+
+                 $_SESSION['login_error'] = "Successfully Logged in";
                 //var_dump($_SESSION["user"]);
-                header("Location : index.php");
+                header("Location : /");
+                exit();
             } else {
-                $message = "Invalid email or password";
-                header("Location : login.php");
-              
+
+                 $_SESSION['login_error'] = "Invalid email or password";
+                header("Location: /login.php");
+                exit();
+
             }
         } else {
-            
+
             $message = "Not Registered Yet!!!";
 
         }
+        header("Location: index.php");
         return $message;
+
     }
     public function logout()
     {
-        
+
         session_destroy();
         header("Location: index.php");
     }

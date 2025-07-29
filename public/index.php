@@ -2,6 +2,8 @@
 namespace app\public;
 session_start();
 
+
+
 require_once '../config/Config.php';
 require_once '../app/Database.php';
 require_once '../app/controllers/BookController.php';
@@ -21,7 +23,7 @@ echo $_SERVER['REQUEST_URI'];
 $conn = openDataConnection();
 
 
-$uri = parse_url($_SERVER['REQUEST_URI'])['path'];
+/*$uri = parse_url($_SERVER['REQUEST_URI'])['path'];
 var_dump($uri);
 $routes = [
       '/'=> 'index.php',
@@ -33,7 +35,7 @@ $routes = [
 if(array_key_exists($uri, $routes)) {
     echo $uri;
     require $routes[$uri];
-}
+} */
 
 $message = "";
 
@@ -64,13 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create'])) {
 }
 
 //update
-$bookToUpdate = null;
 
-if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['update'])) {
-
-    $bookToUpdate = $bookController->updateBook();
-    
-}
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update'])) {
    
     $bookController->updateBook();
@@ -83,5 +79,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['delete'])) {
 }
 
 require 'navBar.php';
-require_once 'createBookForm.php';
 require_once 'booksView.php';
