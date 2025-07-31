@@ -28,7 +28,7 @@ class BookController
             $created_by = $_SESSION['user'];
             $created_at = date("Y-m-d H:i:s");
 
-            $targetDir = "../uploads/";
+            $targetDir = $_SERVER['DOCUMENT_ROOT'] . "/uploads/book_img/";
             $imageName = basename($_FILES["image"]["name"]);
             $targetPath = $targetDir . $imageName;
             move_uploaded_file($_FILES["image"]["tmp_name"], $targetPath);
@@ -42,20 +42,21 @@ class BookController
                 ':price' => $price,
                 ':image' => $imageName,
                 ':created_by' => $created_by,
-                'created_at'=> $created_at
+                'created_at' => $created_at
             ]);
 
 
-           header("Location: index.php");
+            header("Location: index.php");
+            exit();
         }
     }
     public function getBookById($id)
     {
-         $stmt = $this->conn->prepare('SELECT * FROM books WHERE id= :id');
+        $stmt = $this->conn->prepare('SELECT * FROM books WHERE id= :id');
 
-            $stmt->execute([':id' => $id]);
+        $stmt->execute([':id' => $id]);
 
-            return $stmt->fetch();
+        return $stmt->fetch();
     }
     public function updateBook()
     {
@@ -70,9 +71,12 @@ class BookController
             $imageName = $_POST['existing_image'];
 
             if (!empty($_FILES["image"]["name"])) {
-                $targetDir = "../uploads/";
-                $NewImageName = basename($_FILES["image"]["name"]);
+                $targetDir = $_SERVER['DOCUMENT_ROOT'] . "/uploads/book_img/";
+                $NewImageName =uniqid() . '_' . basename($_FILES["image"]["name"]);
                 $targetPath = $targetDir . $NewImageName;
+                if ($imageName && file_exists($targetDir . $imageName)) {
+                    unlink($targetDir . $imageName);
+                }
                 if (move_uploaded_file($_FILES["image"]["tmp_name"], $targetPath)) {
                     $imageName = $NewImageName;
                 }
@@ -102,8 +106,8 @@ class BookController
         $stmt = $this->conn->prepare("SELECT image FROM books WHERE id = :id");
         $stmt->execute(['id' => $id]);
         $image = $stmt->fetchColumn();
-        
-        $imagepath = "../uploads/" . $image;
+
+        $imagepath = $_SERVER['DOCUMENT_ROOT'] . "/uploads/book_img/" . $image;
         //echo realpath("../uploads/" . $image);
         if ($image && file_exists($imagepath)) {
             unlink($imagepath);

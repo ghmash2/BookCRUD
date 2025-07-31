@@ -1,9 +1,11 @@
-<?php 
-// require_once '../app/Database.php';
-// require_once '../app/controllers/BookController.php';
-//  use app\controllers\BookController;
-//  $bookToUpdate = new BookController($conn);
-//  $bookToUpdate->getBookById($_SESSION['user']);
+<?php
+
+
+use app\controllers\UserController;
+ require_once '../app/Database.php';
+ require_once '../app/controllers/UserController.php';
+ $userController = new UserController($conn);
+
 
 ?>
 <!DOCTYPE html>
@@ -26,8 +28,9 @@
             <th>Price</th>
             <th>Created By</th>
             <th>Created At</th>
-            <th colspan="2" style="background-color: F4F6FF"><a href="createBookForm.php" class="btn" style="width: 100%">Add Book</a></th>
-            
+            <th colspan="2" style="background-color: F4F6FF"><a href="createBookForm.php" class="btn"
+                    style="width: 100%">Add Book</a></th>
+
         </thead>
 
         <tbody>
@@ -38,22 +41,22 @@
                     <td> <?= $book['description'] ?> </td>
                     <td> <?= $book['image'] ?> </td>
                     <td> <?= $book['price'] ?> </td>
-                    <td> <?= $book['created_by'] ?> </td>
+                    <td> <?php echo $userController->getUserNameById($book['created_by']) ?> </td>
                     <td> <?= $book['created_at'] ?> </td>
                     <td>
-                        <?php if (((isset($_SESSION['user'])) && $book['created_by']==$_SESSION['user']) || $_SESSION['role']=='admin'): ?>
+                        <?php if (((isset($_SESSION['user'])) && $book['created_by'] == $_SESSION['user']) || $_SESSION['role'] === 'admin'): ?>
                             <div>
                                 <a href="createBookForm.php?id=<?= $book['id'] ?>" class="btn">Update</a>
                             </div>
                         <?php endif ?>
                     </td>
                     <td>
-                        <?php if ((isset($_SESSION['user'])) && $book['created_by']==$_SESSION['user']): ?>
+                        <?php if (((isset($_SESSION['user'])) && $book['created_by'] == $_SESSION['user']) || $_SESSION['role'] === 'admin'): ?>
                             <form action="/" method="get">
                                 <button class="btn" style=" background-color: darkred;" type="submit" name="delete"
                                     value="<?= $book['id'] ?>">Delete</button>
                             </form>
-                            
+
                         <?php endif ?>
                     </td>
                 </tr>

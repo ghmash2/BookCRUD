@@ -1,7 +1,9 @@
 <?php
 namespace app\public;
 session_start();
-
+if (!isset($_SESSION["role"])) {
+    $_SESSION["role"] = "user";
+}
 
 
 require_once '../config/Config.php';
@@ -41,17 +43,17 @@ $message = "";
 
 $authController = new AuthController($conn);
 
-if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
-   $authController->register();
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
+    $authController->register();
 }
-if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
-   //$authController->showLogin();
-  $message = $authController->login();
-  echo $message;
-}
-if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['logout'])) {
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
+    //$authController->showLogin();
+     $authController->login();
     
-   $authController->logout();
+}
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['logout'])) {
+
+    $authController->logout();
 }
 
 
@@ -68,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create'])) {
 //update
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update'])) {
-   
+
     $bookController->updateBook();
 }
 

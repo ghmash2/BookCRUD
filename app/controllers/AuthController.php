@@ -25,15 +25,25 @@ class AuthController
             $password = password_hash($_POST["password"], PASSWORD_DEFAULT);
             $email = $_POST["email"];
 
-            $stmt = $this->conn->prepare("INSERT INTO user(name, email, password) 
-                                                 VALUES (:name, :email, :password)");
+
+            $targetDir = $_SERVER['DOCUMENT_ROOT'] . "/uploads/user_img/"; 
+            $imageName = basename($_FILES["image"]["name"]);
+            $targetPath = $targetDir . $imageName;
+            move_uploaded_file($_FILES["image"]["tmp_name"], $targetPath);
+
+            
+            
+            $stmt = $this->conn->prepare("INSERT INTO user(name, email, image, password) 
+                                                 VALUES (:name, :email, :image, :password)");
             $stmt->execute([
                 ":name" => $name,
                 ":email" => $email,
+                ":image" => $imageName,
                 ":password" => $password
             ]);
 
             header("Location: login.php");
+            exit(); 
         }
     }
     public function login()
@@ -52,25 +62,25 @@ class AuthController
                 $_SESSION["user"] = $user["id"];
                 $_SESSION["username"] = $user["name"];
                 $_SESSION["role"] = $user["role"];
+                $_SESSION["image"] = $user["image"];
 
-                 $_SESSION['login_error'] = "Successfully Logged in";
+                $_SESSION['login_error'] = "Successfully Logged in";
                 //var_dump($_SESSION["user"]);
-                header("Location : /");
+                header("Location: /index.php");
                 exit();
             } else {
 
-                 $_SESSION['login_error'] = "Invalid email or password";
+                $_SESSION['login_error'] = "Invalid email or password";
                 header("Location: /login.php");
                 exit();
 
             }
         } else {
 
-            $message = "Not Registered Yet!!!";
-
+            $_SESSION['login_error'] = "Not Registered Yet!!!";
+            header("Location: /login.php");
+            exit();
         }
-        header("Location: index.php");
-        return $message;
 
     }
     public function logout()

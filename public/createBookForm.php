@@ -7,7 +7,6 @@ session_start();
 require_once '../app/controllers/BookController.php';
 require_once '../app/Database.php';
 
-
  
  $conn = openDataConnection();
 
