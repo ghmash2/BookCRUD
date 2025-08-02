@@ -1,8 +1,15 @@
 <?php
 namespace app\public;
 session_start();
-if (!isset($_SESSION["role"])) {
-    $_SESSION["role"] = "user";
+
+if (!isset($_SESSION['user'])) {
+    $_SESSION['user'] = []; // Initialize as empty array
+} elseif (!is_array($_SESSION['user'])) {
+    // If corrupted, reset it
+    $_SESSION['user'] = [];
+}
+if (!isset($_SESSION['user']['role'])) {
+    $_SESSION['user']['role'] = "user";
 }
 
 

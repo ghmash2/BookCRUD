@@ -18,6 +18,7 @@ class BookController
     {
         $this->conn = $conn;
     }
+   
     public function createBook()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -25,7 +26,7 @@ class BookController
             $author_name = $_POST['author'];
             $description = $_POST['description'];
             $price = $_POST['price'];
-            $created_by = $_SESSION['user'];
+            $created_by = $_SESSION['user']['name'];
             $created_at = date("Y-m-d H:i:s");
 
             $targetDir = $_SERVER['DOCUMENT_ROOT'] . "/uploads/book_img/";
@@ -58,6 +59,8 @@ class BookController
 
         return $stmt->fetch();
     }
+
+    
     public function updateBook()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update'])) {

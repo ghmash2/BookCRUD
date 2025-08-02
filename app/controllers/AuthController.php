@@ -26,13 +26,13 @@ class AuthController
             $email = $_POST["email"];
 
 
-            $targetDir = $_SERVER['DOCUMENT_ROOT'] . "/uploads/user_img/"; 
+            $targetDir = $_SERVER['DOCUMENT_ROOT'] . "/uploads/user_img/";
             $imageName = basename($_FILES["image"]["name"]);
             $targetPath = $targetDir . $imageName;
             move_uploaded_file($_FILES["image"]["tmp_name"], $targetPath);
 
-            
-            
+
+
             $stmt = $this->conn->prepare("INSERT INTO user(name, email, image, password) 
                                                  VALUES (:name, :email, :image, :password)");
             $stmt->execute([
@@ -42,8 +42,16 @@ class AuthController
                 ":password" => $password
             ]);
 
+            $id = $this->conn->lastInsertId();
+            $roleId = $roleId ?? 2;
+            $stmt = $this->conn->prepare("INSERT INTO user_roles(user_id, role_id)
+                                                 VALUES (:user_id, :role_id)");
+            $stmt->execute([
+                ":user_id" => $id,
+                ":role_id"=> $roleId
+            ]);
             header("Location: login.php");
-            exit(); 
+            exit();
         }
     }
     public function login()
@@ -58,26 +66,28 @@ class AuthController
         if ($user) {
             if ($user && password_verify($password, $user["password"])) {
 
-
-                $_SESSION["user"] = $user["id"];
-                $_SESSION["username"] = $user["name"];
-                $_SESSION["role"] = $user["role"];
-                $_SESSION["image"] = $user["image"];
-
-                $_SESSION['login_error'] = "Successfully Logged in";
+                $_SESSION['user'] = [
+                    'id' => $user['id'],
+                    'username' => $user['username'],
+                    'image' => $user['image'],
+                    'role' => $user['role'],
+                    'message' => ""
+                ];
+               
+                $_SESSION['user']['message'] = "Successfully Logged in";
                 //var_dump($_SESSION["user"]);
                 header("Location: /index.php");
                 exit();
             } else {
 
-                $_SESSION['login_error'] = "Invalid email or password";
+                $_SESSION['user']['message'] = "Invalid email or password";
                 header("Location: /login.php");
                 exit();
 
             }
         } else {
 
-            $_SESSION['login_error'] = "Not Registered Yet!!!";
+           $_SESSION['user']['message'] = "Not Registered Yet!!!";
             header("Location: /login.php");
             exit();
         }

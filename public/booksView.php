@@ -18,7 +18,7 @@ use app\controllers\UserController;
 
 <body>
     <h1><?php echo "Book List and" . " Operation" ?></h1>
-    <?= var_dump($_SESSION["role"]) ?>
+    
     <table class="Table">
         <thead style="background-color:grey">
             <th>Name</th>
@@ -44,14 +44,14 @@ use app\controllers\UserController;
                     <td> <?php echo $userController->getUserNameById($book['created_by']) ?> </td>
                     <td> <?= $book['created_at'] ?> </td>
                     <td>
-                        <?php if (((isset($_SESSION['user'])) && $book['created_by'] == $_SESSION['user']) || $_SESSION['role'] === 'admin'): ?>
+                        <?php if (((isset($_SESSION['user']['id'])) && $book['created_by'] == $_SESSION['user']['id']) || $_SESSION['user']['role'] === 'admin'): ?>
                             <div>
                                 <a href="createBookForm.php?id=<?= $book['id'] ?>" class="btn">Update</a>
                             </div>
                         <?php endif ?>
                     </td>
                     <td>
-                        <?php if (((isset($_SESSION['user'])) && $book['created_by'] == $_SESSION['user']) || $_SESSION['role'] === 'admin'): ?>
+                        <?php if (((isset($_SESSION['user']['id'])) && $book['created_by'] == $_SESSION['user']['id']) || $_SESSION['user']['role'] === 'admin'): ?>
                             <form action="/" method="get">
                                 <button class="btn" style=" background-color: darkred;" type="submit" name="delete"
                                     value="<?= $book['id'] ?>">Delete</button>

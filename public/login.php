@@ -14,12 +14,12 @@ session_start();
     <div class="form-container">
       <form action="/" method="post">
         <h2>LogIn</h2>
-        <?php if (isset($_SESSION['login_error'])): ?>
+        <?php if (isset($_SESSION['user']['message'])): ?>
           <div
             style="color: red; padding: 10px; margin-bottom: 15px; border: 1px solid #ff9999; border-radius: 5px; background: #ffeeee;">
-            <?= $_SESSION['login_error'] ?>
+            <?= $_SESSION['user']['message'] ?>
           </div>
-          <?php unset($_SESSION['login_error']); ?>
+          <?php unset($_SESSION['user']['message']); ?>
         <?php endif; ?>
         <div class="form-group">
           <label for="email">Email: </label>

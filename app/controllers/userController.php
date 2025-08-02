@@ -65,10 +65,16 @@ class UserController
             ":id" => $id
          ]);
       }
+      $fetchStmt = $this->conn->prepare("SELECT name, image FROM user WHERE id=:id");
+      $fetchStmt->execute([':id' => $id]);
+      $updatedUser = $fetchStmt->fetch(PDO::FETCH_ASSOC);
 
-      $_SESSION['user']['name'] = htmlspecialchars($name);
+      $_SESSION['user'] = [
+         'id' => $id,
+         'username' => $updatedUser['username'],
+         'image' => $updatedUser['image']
+      ];
 
-      $_SESSION['user']['image'] = $imageName;
       header("Location: profile.php?id=" . $id);
       exit();
 

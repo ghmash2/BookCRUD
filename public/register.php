@@ -6,7 +6,7 @@ use function app\Database\openDataConnection;
   require '../app/database.php';
   $conn = openDataConnection();
   $userController = new UserController($conn);
-
+  $user = "";
   if(isset($_GET["id"]))
   {
         $user = $userController->getUserById($_GET["id"]);

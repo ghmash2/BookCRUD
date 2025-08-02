@@ -28,7 +28,7 @@ require_once '../app/Database.php';
 
 <body>
     
-    <?php if (isset($_SESSION['user'])): ?>
+    <?php if (isset($_SESSION['user']['id'])): ?>
         <?php if ($bookToUpdate): ?>
             <div class="form-container">
                 <form action="/" method="post" enctype="multipart/form-data">
@@ -90,7 +90,9 @@ require_once '../app/Database.php';
             </div>
         <?php endif; ?>
     <?php else: ?>
-        <h4>Not Logged In</h4>
+        <?php
+         header('Location: \login.php');
+        ?>
     <?php endif; ?>
 
 </body>
