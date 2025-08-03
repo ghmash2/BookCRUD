@@ -10,7 +10,10 @@ class UserController
    {
       $this->conn = $conn;
    }
-
+   public function getAllUsers()
+   {
+      return $this->conn->query("SELECT * FROM user ORDER BY id DESC")->fetchAll();
+   }
    public function getUserNameById($id)
    {
       $stmt = $this->conn->prepare("SELECT name FROM user WHERE id=:id");
@@ -27,9 +30,10 @@ class UserController
    }
    public function updateUser($postdata, $filedata)
    {
-
       $id = $postdata['id'];
       $name = $postdata['name'];
+
+   
       !empty($postdata['password']) ? $password = password_hash($postdata['password'], PASSWORD_DEFAULT) : null;
 
       $imageName = $postdata['existing_image'];
@@ -46,22 +50,24 @@ class UserController
          }
       }
       if ($password != null) {
-         $stmt = $this->conn->prepare("UPDATE user SET name = :name, image = :image, password = :password 
+         $stmt = $this->conn->prepare("UPDATE user SET name = :name, image = :image, password = :password
                                            WHERE id = :id");
 
          $stmt->execute([
             ":name" => $name,
             ":image" => $imageName,
             ":password" => $password,
+   
             ":id" => $id
          ]);
       } else {
-         $stmt = $this->conn->prepare("UPDATE user SET name = :name, image = :image 
+         $stmt = $this->conn->prepare("UPDATE user SET name = :name, image = :image
                                            WHERE id = :id");
 
          $stmt->execute([
             ":name" => $name,
             ":image" => $imageName,
+           
             ":id" => $id
          ]);
       }
@@ -73,6 +79,7 @@ class UserController
          'id' => $id,
          'username' => $updatedUser['username'],
          'image' => $updatedUser['image']
+        
       ];
 
       header("Location: profile.php?id=" . $id);

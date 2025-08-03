@@ -1,17 +1,18 @@
-<?php 
-
+<?php
+session_start();
 use app\controllers\UserController;
 use function app\Database\openDataConnection;
-  require '../app/controllers/userController.php';
-  require '../app/database.php';
-  $conn = openDataConnection();
-  $userController = new UserController($conn);
-  $user = "";
-  if(isset($_GET["id"]))
-  {
-        $user = $userController->getUserById($_GET["id"]);
-  }
+require '../app/controllers/userController.php';
+require '../app/database.php';
+require '../app/helpers/auth.php';
+$conn = openDataConnection();
+$userController = new UserController($conn);
+$user = "";
+if (isset($_GET["id"])) {
+    $user = $userController->getUserById($_GET["id"]);
+}
 ?>
+
 <head>
     <link rel="stylesheet" href="css/form.css">
 </head>
@@ -23,7 +24,7 @@ use function app\Database\openDataConnection;
     <div class="formBody">
 
         <div class="form-container">
-            <?php if ($user): ?>
+            <?php if ($user && has_permission($_SESSION['user']['id'], "post-update")): ?>
                 <form action="profile.php" method="post" enctype="multipart/form-data">
                     <h2>Edit Profile</h2>
 

@@ -1,7 +1,10 @@
 <?php
 use app\controllers\UserController;
+use function app\Database\openDataConnection;
    require_once '../app/Database.php';
    require_once '../app/controllers/UserController.php';
+
+   $conn = openDataConnection();
    $userController = new UserController($conn);
 
 ?>
@@ -29,7 +32,7 @@ use app\controllers\UserController;
         <?php if (isset($_SESSION['user']['id'])): ?>
             <div class="profile">
                 <!--  -->
-               
+                
                 <a href="\profile.php?id=<?= $_SESSION['user']['id'] ?>" style="color: #e5ecf3ff; text-decoration: none;">
                     <img src= "/uploads/user_img/<?= $_SESSION['user']['image'] ?>" alt="Profile">
                     <!-- <span><?= $_SESSION['user']['username'] ?></span> -->

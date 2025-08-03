@@ -68,12 +68,12 @@ class AuthController
 
                 $_SESSION['user'] = [
                     'id' => $user['id'],
-                    'username' => $user['username'],
+                    'username' => $user['name'],
                     'image' => $user['image'],
                     'role' => $user['role'],
                     'message' => ""
                 ];
-               
+                
                 $_SESSION['user']['message'] = "Successfully Logged in";
                 //var_dump($_SESSION["user"]);
                 header("Location: /index.php");
