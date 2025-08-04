@@ -44,6 +44,65 @@ class AdminController
             ":user_id" => $user_id
         ]);
 
+        $_SESSION['user']['role']= $role_id;
+
+    }
+    public function deleteUser($id)
+    {
+       $stmt = $this->conn->prepare("SELECT image FROM user WHERE id=:id");
+       $stmt->execute([":id"=> $id]);
+       $image = $stmt->fetchColumn();
+       $imagePath = $_SERVER['DOCUMENT_ROOT'] ."/uploads/book_img/". $image;
+       if($image && file_exists($imagePath)){
+        unlink($imagePath);
+       }
+
+       $stmt = $this->conn->prepare("DELETE FROM user WHERE id=:id");
+       $stmt->execute([":id"=> $id]);
+
+
+    }
+     public function getRoles(): array {
+        $stmt = $this->conn->query("SELECT * FROM roles");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getPermissions(): array {
+        $stmt = $this->conn->query("SELECT * FROM permissions");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getRolePermissions(int $roleId): array {
+        $stmt = $this->conn->prepare("
+            SELECT permission_id 
+            FROM role_permissions 
+            WHERE role_id = ?
+        ");
+        $stmt->execute([$roleId]);
+        return $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
+    }
+
+    public function updateRolePermissions(int $roleId, array $permissionIds): bool {
+        try {
+            $this->conn->beginTransaction();
+            
+            // Clear existing permissions
+            $stmt = $this->conn->prepare("DELETE FROM role_permissions WHERE role_id = ?");
+            $stmt->execute([$roleId]);
+            
+            // Insert new permissions
+            $stmt = $this->conn->prepare("INSERT INTO role_permissions (role_id, permission_id) VALUES (?, ?)");
+            foreach ($permissionIds as $permId) {
+                $stmt->execute([$roleId, $permId]);
+            }
+            
+            $this->conn->commit();
+            return true;
+        } catch (\PDOException $e) {
+            $this->conn->rollBack();
+            error_log("Permission update failed: " . $e->getMessage());
+            return false;
+        }
     }
 }
 

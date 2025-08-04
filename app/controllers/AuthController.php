@@ -1,16 +1,19 @@
 <?php
 namespace app\controllers;
-
 use PDO;
 
+require_once 'adminController.php';
 class AuthController
 {
 
     private PDO $conn;
+     private $adminController;
     public function __construct($conn)
     {
         $this->conn = $conn;
+        $this->adminController = new AdminController($conn);
     }
+   
     /* public function showLogin()
      {
      }
@@ -48,7 +51,7 @@ class AuthController
                                                  VALUES (:user_id, :role_id)");
             $stmt->execute([
                 ":user_id" => $id,
-                ":role_id"=> $roleId
+                ":role_id" => $roleId
             ]);
             header("Location: login.php");
             exit();
@@ -63,6 +66,9 @@ class AuthController
         $stmt->execute([":email" => $email]);
         $user = $stmt->fetch();
 
+        $role = $this->adminController->getRoleId($user["id"]);
+        
+
         if ($user) {
             if ($user && password_verify($password, $user["password"])) {
 
@@ -70,24 +76,24 @@ class AuthController
                     'id' => $user['id'],
                     'username' => $user['name'],
                     'image' => $user['image'],
-                    'role' => $user['role'],
+                    'role' => $role,
                     'message' => ""
                 ];
-                
-                $_SESSION['user']['message'] = "Successfully Logged in";
+
+                $_SESSION['user']['message'] = "Successfully Logged in!";
                 //var_dump($_SESSION["user"]);
                 header("Location: /index.php");
                 exit();
             } else {
 
-                $_SESSION['user']['message'] = "Invalid email or password";
+                $_SESSION['user']['message'] = "Incorrect password!";
                 header("Location: /login.php");
                 exit();
 
             }
         } else {
 
-           $_SESSION['user']['message'] = "Not Registered Yet!!!";
+            $_SESSION['user']['message'] = "Not Registered Yet!!!";
             header("Location: /login.php");
             exit();
         }

@@ -11,14 +11,20 @@ require '../app/helpers/auth.php';
 $conn = openDataConnection();
 $userController = new UserController($conn);
 $allusers = $userController->getAllUsers();
-
+$adminController = new AdminController($conn);
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'updateUserRole') {
   $userId = (int) $_POST['user_id'];
   $roleId = (int) $_POST['role_id'];
 
   $adminController->updateUser($userId, $roleId);
-  // header("Location: dashboard.php");
-  // exit();
+   header("Location: dashboard.php");
+   exit();
+}
+if($_SERVER['REQUEST_METHOD'] === 'GET' &&  isset($_GET['delete']))
+{
+   $adminController->deleteUser($_GET['delete']);
+   header("Location: dashboard.php");
+   exit();
 }
 require 'navBar.php';
 ?>
@@ -31,8 +37,12 @@ require 'navBar.php';
 </head>
 
 <body>
-  <h1><?php echo "Admin Panel" ?></h1>
-
+  <h1><?php echo "Users List" ?></h1>
+ <?php if ((isset($_SESSION['user']['id'])) && has_permission($_SESSION['user']['id'], "permission-view")): ?>
+  <div >
+     <a href="/permission.php" class="btn" style="width: 200px;">Permission Option</a>
+  </div>
+   <?php endif ?>
   <table class="Table">
     <thead style="background-color:grey">
       <th>Name</th>
@@ -61,12 +71,7 @@ require 'navBar.php';
             <?php if (((isset($_SESSION['user']['id'])) && has_permission($_SESSION['user']['id'], "role-update"))): ?>
               <div>
                 <form method="post" action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>">
-                  <?php
-                  $adminController = new AdminController($conn);
-                  $currentRoleId = $adminController->getRoleId($user['id']);
-                  var_dump($currentRoleId);
-                  var_dump($user['id']);
-                  ?>
+                  <?php $currentRoleId = $adminController->getRoleId($user['id']);?>
                   <input type="hidden" name="action" value="updateUserRole">
                   <input type="hidden" name="user_id" value="<?= $user['id'] ?>">
 
@@ -82,8 +87,8 @@ require 'navBar.php';
           </td>
           <td>
             <?php if ((isset($_SESSION['user']['id'])) && has_permission($_SESSION['user']['id'], "role-delete")): ?>
-              <form action="/" method="get">
-                <button class="btn" style=" background-color: darkred;" type="submit" name="delete"
+              <form action="<?=htmlspecialchars($_SERVER['PHP_SELF'])?>" method="get">
+                <button class="btn" style=" background-color: darkred; width: 100px;" type="submit" name="delete"
                   value="<?= $user['id'] ?>">Delete</button>
               </form>
 

@@ -1,4 +1,5 @@
 <?php
+// session_start();
 use app\controllers\UserController;
 use function app\Database\openDataConnection;
    require_once '../app/Database.php';

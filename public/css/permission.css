@@ -1,0 +1,26 @@
+.container {
+    display: flex;
+    gap: 9rem;
+    background-color: aliceblue;
+    padding-top: 20px;
+}
+
+.role-list {
+    width: 200px;
+    padding-left: 10px;
+}
+
+.permission-list {
+    flex: 1;
+}
+
+.permission-item {
+    margin: 5px 0;
+}
+
+.btn {
+    margin-top: 1rem;
+}
+h1{
+    text-align: center;
+}

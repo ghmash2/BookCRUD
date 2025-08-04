@@ -1,5 +1,5 @@
 <?php
-//session_start();
+session_start();
 use app\controllers\UserController;
 use function app\Database\openDataConnection;
 require_once '../app/Database.php';
@@ -35,7 +35,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset( $_POST['update'])) {
             <div class="user-info">
                 <h1><?= $user['name'] ?></h1>
                 <p><?= $user['email'] ?></p>
-                <span class="badge"><?= $user['role'] ?></span>
+                <span class="badge"><?php  if($_SESSION['user']['role'] == 2) echo "user"; else echo "admin"; ?></span>
             </div>
         </div>
 

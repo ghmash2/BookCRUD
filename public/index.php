@@ -83,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update'])) {
 
 //delete
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['delete'])) {
-    echo "Delete Item: ";
+    //echo "Delete Item: ";
     $bookController->deleteBook();
 }
 
