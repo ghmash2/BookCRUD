@@ -7,16 +7,16 @@ session_start();
 require_once '../app/controllers/BookController.php';
 require_once '../app/Database.php';
 
- 
- $conn = openDataConnection();
 
- $bookController = new BookController($conn);
- $bookToUpdate="";
- if(isset($_GET['id']))
- {
+$conn = openDataConnection();
+
+$bookController = new BookController($conn);
+$bookToUpdate = "";
+if (isset($_GET['id'])) {
     $bookToUpdate = $bookController->getBookById($_GET['id']);
- }
- 
+}
+$categories = $bookController->getCategories();
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -27,7 +27,7 @@ require_once '../app/Database.php';
 </head>
 
 <body>
-    
+
     <?php if (isset($_SESSION['user']['id'])): ?>
         <?php if ($bookToUpdate): ?>
             <div class="form-container">
@@ -74,6 +74,20 @@ require_once '../app/Database.php';
                         <input type="text" name="author" id="author" required>
                     </div>
                     <div class="form-group">
+                        <label>Categories</label>
+                        <div class="categories-container">
+                            <?php
+                            
+                            foreach ($categories as $category) {
+                                echo "<div class='category-item'>";
+                                echo "<input type='checkbox' id='cat-{$category['id']}' name='categories[]' value='{$category['id']}'>";
+                                echo "<label for='cat-{$category['id']}'>{$category['name']}</label>";
+                                echo "</div>";
+                            }
+                            ?>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label for="description">Description: </label>
                         <input type="text" name="description" id="description" required>
                     </div>
@@ -91,9 +105,10 @@ require_once '../app/Database.php';
         <?php endif; ?>
     <?php else: ?>
         <?php
-         header('Location: \login.php');
+        header('Location: \login.php');
         ?>
     <?php endif; ?>
 
 </body>
+
 </html>

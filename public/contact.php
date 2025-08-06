@@ -195,7 +195,7 @@
             
             <div class="contact-form">
                 <h2>Send Us a Message</h2>
-                <form action="/submit-form" method="POST">
+                <form action="/contact.php" method="POST">
                     <div class="form-group">
                         <label for="name">Your Name</label>
                         <input type="text" id="name" name="name" required>

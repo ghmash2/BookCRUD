@@ -27,6 +27,7 @@ class AdminController
         $stmt->execute([":user_id" => $user_id]);
         return $stmt->fetchColumn() ?? 2;
     }
+    
     public function updateUser($userId, $roleId)
     {
         $user_id = $userId;

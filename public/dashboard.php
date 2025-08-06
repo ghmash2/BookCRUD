@@ -17,14 +17,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
   $roleId = (int) $_POST['role_id'];
 
   $adminController->updateUser($userId, $roleId);
-   header("Location: dashboard.php");
-   exit();
+  header("Location: dashboard.php");
+  exit();
 }
-if($_SERVER['REQUEST_METHOD'] === 'GET' &&  isset($_GET['delete']))
-{
-   $adminController->deleteUser($_GET['delete']);
-   header("Location: dashboard.php");
-   exit();
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['delete'])) {
+  $adminController->deleteUser($_GET['delete']);
+  header("Location: dashboard.php");
+  exit();
 }
 require 'navBar.php';
 ?>
@@ -38,11 +37,11 @@ require 'navBar.php';
 
 <body>
   <h1><?php echo "Users List" ?></h1>
- <?php if ((isset($_SESSION['user']['id'])) && has_permission($_SESSION['user']['id'], "permission-view")): ?>
-  <div >
-     <a href="/permission.php" class="btn" style="width: 200px;">Permission Option</a>
-  </div>
-   <?php endif ?>
+  <?php if ((isset($_SESSION['user']['id'])) && has_permission($_SESSION['user']['id'], "permission-view")): ?>
+    <div>
+      <a href="/permission.php" class="btn" style="width: 200px;">Permission Option</a>
+    </div>
+  <?php endif ?>
   <table class="Table">
     <thead style="background-color:grey">
       <th>Name</th>
@@ -57,46 +56,53 @@ require 'navBar.php';
     </thead>
 
     <tbody>
-      <?php foreach ($allusers as $user): ?>
-        <tr>
-          <td> <?= $user['name'] ?> </td>
-          <td> <?= $user['email'] ?> </td>
-          <td> <?= $user['image'] ?> </td>
-          <!-- <td> <?= $user['role'] ?> </td> -->
+      
+        <?php foreach ($allusers as $user): ?>
+          <?php if (((isset($_SESSION['user']['id'])) && ($_SESSION['user']['id'] == $user['id'])) || $_SESSION['user']['role'] == 1): ?>
+          <tr>
+           
+            <td> <?= $user['name'] ?> </td>
+            <td> <?= $user['email'] ?> </td>
+            <td> <?= $user['image'] ?> </td>
+            <td> <?= $adminController->getRoleId($user['id']) == 2 ? "user" : "admin"?> </td>
 
-          <!-- <td> <?php echo $userController->getUserNameById($user['created_by']) ?> </td>
+
+            <!-- <td> <?php echo $userController->getUserNameById($user['created_by']) ?> </td>
                     <td> <?= $user['created_at'] ?> </td> -->
 
-          <td>
-            <?php if (((isset($_SESSION['user']['id'])) && has_permission($_SESSION['user']['id'], "role-update"))): ?>
-              <div>
-                <form method="post" action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>">
-                  <?php $currentRoleId = $adminController->getRoleId($user['id']);?>
-                  <input type="hidden" name="action" value="updateUserRole">
-                  <input type="hidden" name="user_id" value="<?= $user['id'] ?>">
+            <td>
+              <?php if (((isset($_SESSION['user']['id'])) && has_permission($_SESSION['user']['id'], "role-update"))): ?>
+                <div>
+                  <form method="post" action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>">
+                    <?php $currentRoleId = $adminController->getRoleId($user['id']); ?>
+                    <input type="hidden" name="action" value="updateUserRole">
+                    <input type="hidden" name="user_id" value="<?= $user['id'] ?>">
 
-                  <!-- <label for="role">User Role:</label> -->
-                  <select name="role_id" id="role" class="">
-                    <option value=1 <?= $currentRoleId == 1 ? 'selected' : '' ?>>Admin</option>
-                    <option value=2 <?= $currentRoleId == 2 ? 'selected' : '' ?>>User</option>
-                  </select>
-                  <button type="submit" class="">Update</button>
+                    <!-- <label for="role">User Role:</label> -->
+                    <select name="role_id" id="role" class="">
+                      <option value=1 <?= $currentRoleId == 1 ? 'selected' : '' ?>>Admin</option>
+                      <option value=2 <?= $currentRoleId == 2 ? 'selected' : '' ?>>User</option>
+                    </select>
+                    <button type="submit" class="">Update</button>
+                  </form>
+                </div>
+              <?php endif ?>
+            </td>
+            <td>
+              <?php if ((isset($_SESSION['user']['id'])) && has_permission($_SESSION['user']['id'], "role-delete")): ?>
+                <form action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="get">
+                  <button class="btn" style=" background-color: darkred; width: 100px;" type="submit" name="delete"
+                    value="<?= $user['id'] ?>">Delete</button>
                 </form>
-              </div>
-            <?php endif ?>
-          </td>
-          <td>
-            <?php if ((isset($_SESSION['user']['id'])) && has_permission($_SESSION['user']['id'], "role-delete")): ?>
-              <form action="<?=htmlspecialchars($_SERVER['PHP_SELF'])?>" method="get">
-                <button class="btn" style=" background-color: darkred; width: 100px;" type="submit" name="delete"
-                  value="<?= $user['id'] ?>">Delete</button>
-              </form>
 
-            <?php endif ?>
-          </td>
-        </tr>
-      <?php endforeach ?>
+              <?php endif ?>
+            </td>
+          </tr>
+          <?php endif; ?>
+        <?php endforeach ?>
+      
     </tbody>
+
 
   </table>
 </body>

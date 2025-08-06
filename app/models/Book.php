@@ -8,7 +8,6 @@ use app\Database;
 
 class Book
 {
-
     private $name;
     private $price;
     private $description;

@@ -18,15 +18,16 @@ class BookController
     {
         $this->conn = $conn;
     }
-   
+
     public function createBook()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $name = $_POST["name"];
             $author_name = $_POST['author'];
+            $selectedCategories = $_POST['categories'] ?? [];
             $description = $_POST['description'];
             $price = $_POST['price'];
-            $created_by = $_SESSION['user']['name'];
+            $created_by = $_SESSION['user']['id'];
             $created_at = date("Y-m-d H:i:s");
 
             $targetDir = $_SERVER['DOCUMENT_ROOT'] . "/uploads/book_img/";
@@ -43,8 +44,15 @@ class BookController
                 ':price' => $price,
                 ':image' => $imageName,
                 ':created_by' => $created_by,
-                'created_at' => $created_at
+                ':created_at' => $created_at
             ]);
+            $book_id = $this->conn->lastInsertId();
+            if (!empty($selectedCategories)) {
+                $stmt = $this->conn->prepare("INSERT INTO book_category(book_id, category_id) VALUES(:book_id, :category_id)");
+                foreach ($selectedCategories as $selectedCategory) {
+                    $stmt->execute([":book_id" => $book_id, ":category_id" => $selectedCategory]);
+                }
+            }
 
 
             header("Location: index.php");
@@ -60,7 +68,7 @@ class BookController
         return $stmt->fetch();
     }
 
-    
+
     public function updateBook()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update'])) {
@@ -75,7 +83,7 @@ class BookController
 
             if (!empty($_FILES["image"]["name"])) {
                 $targetDir = $_SERVER['DOCUMENT_ROOT'] . "/uploads/book_img/";
-                $NewImageName =uniqid() . '_' . basename($_FILES["image"]["name"]);
+                $NewImageName = uniqid() . '_' . basename($_FILES["image"]["name"]);
                 $targetPath = $targetDir . $NewImageName;
                 if ($imageName && file_exists($targetDir . $imageName)) {
                     unlink($targetDir . $imageName);
@@ -119,5 +127,19 @@ class BookController
         $stmt->execute(['id' => $id]);
 
         header("Location: index.php");
+    }
+    public function getCategories()
+    {
+        $stmt = $this->conn->query("SELECT id, name FROM category ORDER BY name");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public function getBookCategory($id)
+    {
+         $stmt = $this->conn->prepare("SELECT c.name 
+                              FROM category c
+                              JOIN book_category bc ON c.id = bc.category_id
+                              WHERE bc.book_id = ?");
+        $stmt->execute([$id]);
+        return $stmt->fetchAll(PDO::FETCH_COLUMN);
     }
 }

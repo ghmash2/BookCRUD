@@ -25,7 +25,7 @@ use app\controllers\authController;
 use function app\Database\openDataConnection;
 use PDO;
 use PDOException;
-echo $_SERVER['REQUEST_URI'];
+// echo $_SERVER['REQUEST_URI'];
 
 
 

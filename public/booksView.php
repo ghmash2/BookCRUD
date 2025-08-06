@@ -24,11 +24,12 @@ use app\controllers\UserController;
         <thead style="background-color:grey">
             <th>Name</th>
             <th>Author</th>
-            <th>Description</th>
-            <th>Image</th>
+            <!-- <th>Description</th>
+            <th>Image</th> -->
             <th>Price</th>
-            <th>Created By</th>
-            <th>Created At</th>
+            <th>Details</th>
+            <!-- <th>Created By</th>
+            <th>Created At</th> -->
             <th colspan="2" style="background-color: F4F6FF"><a href="createBookForm.php" class="btn"
                     style="width: 100%">Add Book</a></th>
 
@@ -39,11 +40,18 @@ use app\controllers\UserController;
                 <tr>
                     <td> <?= $book['name'] ?> </td>
                     <td> <?= $book['author_name'] ?> </td>
-                    <td> <?= $book['description'] ?> </td>
-                    <td> <?= $book['image'] ?> </td>
+                    <!-- <td> <?= $book['description'] ?> </td>
+                    <td> <?= $book['image'] ?> </td> -->
                     <td> <?= $book['price'] ?> </td>
-                    <td> <?php echo $userController->getUserNameById($book['created_by']) ?> </td>
-                    <td> <?= $book['created_at'] ?> </td>
+                    <!-- <td> <?php echo $userController->getUserNameById($book['created_by']) ?> </td>
+                    <td> <?= $book['created_at'] ?> </td> -->
+                     <td>
+                        <?php if (((isset($_SESSION['user']['id'])) && has_permission($_SESSION['user']['id'], "post-view")) || $_SESSION['user']['role'] === 1): ?>
+                            <div>
+                                <a href="bookDetails.php?id=<?= $book['id'] ?>" class="btn" style="background-color: grey;">Details</a>
+                            </div>
+                        <?php endif ?>
+                    </td>
                     <td>
                         <?php if (((isset($_SESSION['user']['id'])) && $book['created_by'] == $_SESSION['user']['id'] && has_permission($_SESSION['user']['id'], "post-update")) || $_SESSION['user']['role'] === 1): ?>
                             <div>
