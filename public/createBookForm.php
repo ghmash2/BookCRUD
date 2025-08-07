@@ -3,7 +3,11 @@
 use function app\Database\openDataConnection;
 use app\controllers\BookController;
 session_start();
-
+if(!isset($_SESSION['user']['id']))
+{
+    header('Location: login.php');
+    exit();
+}
 require_once '../app/controllers/BookController.php';
 require_once '../app/Database.php';
 

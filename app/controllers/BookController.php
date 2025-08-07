@@ -67,7 +67,11 @@ class BookController
 
         return $stmt->fetch();
     }
-
+    public function getAllBooks()
+    {
+        $stmt = $this->conn->query("SELECT * FROM books  ORDER BY id DESC");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
     public function updateBook()
     {
@@ -113,9 +117,13 @@ class BookController
     }
     public function deleteBook()
     {
+        //delete foreign key attribute from book_category
         $id = $_GET["delete"];
+        $stmt = $this->conn->prepare("DELETE FROM book_category WHERE book_id=:id");
+        $stmt->execute([':id' => $id]);
+
         $stmt = $this->conn->prepare("SELECT image FROM books WHERE id = :id");
-        $stmt->execute(['id' => $id]);
+        $stmt->execute([':id' => $id]);
         $image = $stmt->fetchColumn();
 
         $imagepath = $_SERVER['DOCUMENT_ROOT'] . "/uploads/book_img/" . $image;
@@ -124,7 +132,7 @@ class BookController
             unlink($imagepath);
         }
         $stmt = $this->conn->prepare("DELETE FROM books WHERE id=:id");
-        $stmt->execute(['id' => $id]);
+        $stmt->execute([':id' => $id]);
 
         header("Location: index.php");
     }

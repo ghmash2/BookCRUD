@@ -7,7 +7,7 @@ use function app\Database\openDataConnection;
 
    $conn = openDataConnection();
    $userController = new UserController($conn);
-
+   
 ?>
 
 <!DOCTYPE html>
@@ -26,7 +26,7 @@ use function app\Database\openDataConnection;
         <div class="left-section">
             <a href="/" class="logo">BookCRUD</a>
             <a href="index.php" class="nav-link">Home</a>
-            <a href="dashboard.php" class="nav-link">Dashboard</a>
+            <?php if(isset($_SESSION['user']['id'])):?> <a href="dashboard.php" class="nav-link">Dashboard</a> <?php endif;?>
             <a href="contact.php" class="nav-link">Contact</a>
         </div>
 

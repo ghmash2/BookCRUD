@@ -1,5 +1,10 @@
 <?php
 session_start();
+if(!isset($_SESSION['user']['id']))
+{
+    header('Location: login.php');
+    exit();
+}
 use app\controllers\AdminController;
 use app\controllers\UserController;
 use function app\Database\openDataConnection;
