@@ -20,5 +20,10 @@ class CategoryController{
            $stmt->execute( [":category_id"=> $categoryId] );
           return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    public function getSelectedCategory($book_id){
+        $stmt = $this->conn->prepare("SELECT category_id FROM book_category WHERE book_id=:book_id");
+        $stmt->execute( [":book_id"=> $book_id ] );
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
 ?>

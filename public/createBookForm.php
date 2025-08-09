@@ -1,5 +1,6 @@
 <?php
 
+use app\controllers\CategoryController;
 use function app\Database\openDataConnection;
 use app\controllers\BookController;
 session_start();
@@ -9,17 +10,20 @@ if(!isset($_SESSION['user']['id']))
     exit();
 }
 require_once '../app/controllers/BookController.php';
+require_once '../app/controllers/CategoryController.php';
 require_once '../app/Database.php';
 
 
 $conn = openDataConnection();
 
 $bookController = new BookController($conn);
+$categoryController = new CategoryController($conn);
 $bookToUpdate = "";
 if (isset($_GET['id'])) {
     $bookToUpdate = $bookController->getBookById($_GET['id']);
 }
 $categories = $bookController->getCategories();
+$selectedCategory = $categoryController->getSelectedCategory($bookToUpdate['id']);
 
 ?>
 <!DOCTYPE html>
@@ -27,7 +31,6 @@ $categories = $bookController->getCategories();
 
 <head>
     <link rel="stylesheet" href="css/form.css">
-
 </head>
 
 <body>
@@ -56,6 +59,21 @@ $categories = $bookController->getCategories();
                         <label>Price:</label>
                         <input type="number" name="price" step="0.00001"
                             value="<?= htmlspecialchars($bookToUpdate['price']) ?>">
+                    </div>
+                    <div class="form-group">
+                        <label>Categories</label>
+                        <div class="categories-container">
+                            <?php
+                            
+                            foreach ($categories as $category) {
+                                echo "<div class='category-item'>";
+                                echo "<label for='cat-{$category['id']}'>{$category['name']}</label>";
+                                <input type='checkbox' id='cat-{$category['id']}' name='categories[]' value='{$category['id']}'
+                                if(in_array($category['id'], $selectedCategory)) echo 'selected';> 
+                                echo "</div>";
+                            }
+                            ?>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label>New Image:</label>
